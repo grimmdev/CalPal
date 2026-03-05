@@ -1,0 +1,56 @@
+name: CalPal
+services:
+  calpal:
+    cpu_shares: 90
+    command: []
+    container_name: calpal
+    deploy:
+      resources:
+        limits:
+          memory: 15406M
+    environment:
+      - BASE_URL=http://localhost:8080
+      - GOOGLE_CLIENT_ID=
+      - GOOGLE_CLIENT_SECRET=
+      - MICROSOFT_CLIENT_ID=
+      - MICROSOFT_CLIENT_SECRET=
+      - MICROSOFT_TENANT_ID=common
+      - PORT=8080
+      - SMTP_FROM=
+      - SMTP_HOST=
+      - SMTP_PASS=
+      - SMTP_PORT=587
+      - SMTP_USER=
+    hostname: calpal
+    image: ghcr.io/grimmdev/calpal:latest
+    labels:
+      icon: https://raw.githubusercontent.com/grimmdev/CalPal/refs/heads/main/static/calpal.svg
+    ports:
+      - target: 8080
+        published: "8080"
+        protocol: tcp
+    restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /DATA/AppData/CalPal/templates
+        target: /app/templates
+      - type: bind
+        source: /DATA/AppData/CalPal/data
+        target: /app/data
+    devices: []
+    cap_add: []
+    network_mode: bridge
+    privileged: false
+x-casaos:
+  author: self
+  category: self
+  hostname: ""
+  icon: https://raw.githubusercontent.com/grimmdev/CalPal/refs/heads/main/static/calpal.svg
+  index: /
+  is_uncontrolled: false
+  port_map: "8080"
+  scheme: http
+  store_app_id: CalPal
+  title:
+    custom: CalPal
+    en_us: calpal
