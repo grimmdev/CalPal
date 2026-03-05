@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalPal</title>
+    <link rel="icon" type="image/svg+xml" href="/static/calpal.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8e44ad;
+            --primary-hover: #9b59b6;
+            --bg: #f3e5f5;
+            --card: #ffffff;
+            --card-alt: #f8fafc;
+            --card-alt2: #f1f5f9;
+            --text: #333;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+            --muted: #64748b;
+        }
+
+        body.dark {
+            --primary: #c084fc;
+            --primary-hover: #a855f7;
+            --bg: #0f0a1a;
+            --card: #1a1028;
+            --card-alt: #110d1f;
+            --card-alt2: #2e1f47;
+            --text: #f0e6ff;
+            --border: #2e1f47;
+            --success: #34d399;
+            --danger: #f87171;
+            --muted: #9d8ec0;
+        }
+
+        body.dark .container {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        body.dark input,
+        body.dark select,
+        body.dark textarea {
+            background: var(--card-alt);
+            color: var(--text);
+        }
+
+        body.dark .modal-overlay {
+            background: rgba(0, 0, 0, 0.75);
+        }
+
+        body.dark .alert-success {
+            background: #064e3b;
+            color: #6ee7b7;
+        }
+
+        body.dark .alert-error {
+            background: #450a0a;
+            color: #fca5a5;
+        }
+
+        body.dark .btn-danger {
+            background: #450a0a;
+            color: var(--danger);
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 16px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            inset: 0;
+            background: var(--border);
+            border-radius: 26px;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+
+        .toggle-slider:before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: 3px;
+            top: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.25s;
+        }
+
+        .toggle-switch input:checked+.toggle-slider {
+            background: var(--primary);
+        }
+
+        .toggle-switch input:checked+.toggle-slider:before {
+            transform: translateX(22px);
+        }
+
+        body {
+            font-family: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--text);
+            padding: 40px 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background: var(--card);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            max-width: 700px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            color: var(--text);
+            margin-top: 0;
+        }
+
+        .text-primary {
+            color: var(--primary);
+        }
+
+        .text-muted {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-block;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background: var(--card-alt2);
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-danger {
+            background: #fee2e2;
+            color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background: #fecaca;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            margin: 6px 0 16px 0;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-sizing: border-box;
+            outline: none;
+            font-family: inherit;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.1);
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .card {
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            background: var(--card);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .slots {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .slot {
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 12px;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+            background: var(--card);
+            background: var(--primary);
+            color: white;
+        }
+
+        .slot.disabled {
+            background: var(--card-alt);
+            border-color: var(--border);
+            color: var(--border);
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+            gap: 20px;
+        }
+
+        .tab {
+            padding: 10px 4px;
+            font-weight: 600;
+            color: var(--muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal {
+            background: var(--card);
+            padding: 24px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+            margin-top: 6px;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: normal;
+            background: var(--card-alt2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-group input {
+            width: auto;
+            margin: 0;
+        }
+
+        .page-active {
+            display: block !important;
+        }
+
+        .page-inactive {
+            display: none !important;
+        }
+
+        @media (max-width: 650px) {
+            .container {
+                padding: 1.5rem;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+
+            body {
+                padding: 0;
+            }
+
+            .split-view {
+                flex-direction: column !important;
+                gap: 20px !important;
+            }
+
+            .split-view>div {
+                border-left: none !important;
+                padding-left: 0 !important;
+                border-right: none !important;
+                padding-right: 0 !important;
+            }
+
+            #signup-divider {
+                border-top: 1px solid var(--border);
+                padding-top: 20px;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        {{if .Message}}<div class="alert alert-success">{{.Message}}</div>{{end}}
+        {{if .Error}}<div class="alert alert-error">{{.Error}}</div>{{end}}
+
+        <div id="go-env-check" style="display:none;">{{.Page}}</div>
+
+        <div id="page-home" class="{{if eq .Page `home`}}page-active{{else}}page-inactive{{end}}">
+            <div style="text-align:center; margin-bottom: 32px;">
+                <img src="/static/calpal.svg" alt="CalPal" style="height: 72px; width: auto;">
+                <h1 style="margin: 12px 0 6px 0; font-size: 2.2rem; color: var(--primary);">CalPal</h1>
+                <p style="margin: 0; color: var(--muted);">Your personal scheduling assistant.</p>
+            </div>
+            <p style="text-align:center; color: var(--muted); margin-bottom: 40px;">Your personal, self-hosted
+                scheduling assistant.</p>
+
+            <div class="split-view" style="display: flex; gap: 40px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 250px;">
+                    <h3>Welcome Back</h3>
+                    <form method="POST" action="/login">
+                        <label>Username</label><input type="text" name="username" required>
+                        <label>Password</label><input type="password" name="password" required>
+                        <button class="btn btn-primary" style="width:100%">Login</button>
+                    </form>
+                </div>
+                <div style="flex: 1; min-width: 250px; border-left: 1px solid var(--border); padding-left: 40px;"
+                    id="signup-divider">
+                    <h3>Create Account</h3>
+                    <form method="POST" action="/signup">
+                        <label>Username</label><input type="text" name="username" required>
+                        <label>Email <span class="text-muted">(For notifications)</span></label><input type="email"
+                            name="email" required>
+                        <label>Password</label><input type="password" name="password" required>
+                        <button class="btn" style="width:100%; background: var(--success); color: white;">Sign
+                            Up</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-dashboard" class="{{if eq .Page `dashboard`}}page-active{{else}}page-inactive{{end}}">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <img src="/static/calpal.svg" alt="CalPal" style="height: 36px; width: auto;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <span class="text-muted" id="nav-username">{{if .User}}{{.User.Username}}{{end}}</span>
+                    <a href="/logout" class="btn btn-secondary btn-sm">Logout</a>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('event-types')">Event Types</div>
+                <div class="tab" onclick="switchTab('scheduled')">Scheduled Events</div>
+                <div class="tab" onclick="switchTab('settings')">Settings</div>
+            </div>
+
+            <div id="event-types" class="tab-content active">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                    <h3>Your Booking Links</h3>
+                    <button class="btn btn-primary btn-sm"
+                        onclick="document.getElementById('newEventModal').style.display='flex'">+ New Event
+                        Type</button>
+                </div>
+
+                <div id="dynamic-events">
+                    {{range .EventTypes}}
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 style="margin:0;">{{.Title}} <span class="text-muted"
+                                    style="font-weight:normal;">({{.Duration}} min)</span></h4>
+                            <div>
+                                <form method="POST" action="/dashboard/event/delete" style="display:inline;"
+                                    onsubmit="return confirm('Delete this event type?');">
+                                    <input type="hidden" name="id" value="{{.ID}}">
+                                    <button class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                        <p class="text-muted" style="margin: 5px 0 15px 0;">{{if
+                            .Description}}{{.Description}}{{else}}No description.{{end}}</p>
+
+                        {{if gt .ReminderMinutes 0}}
+                        <p style="font-size: 0.85rem; color: var(--primary); margin-top: -5px;">⏰ Auto-reminder set for
+                            {{.ReminderMinutes}} mins before</p>
+                        {{end}}
+
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <input type="text" value="{{$.BaseURL}}/u/{{$.User.Username}}/{{.Slug}}" readonly
+                                style="margin:0; background:var(--card-alt); color:var(--muted); cursor:copy; flex: 1; min-width: 200px;"
+                                onclick="this.select(); document.execCommand('copy'); alert('Copied to clipboard!');">
+                            <a href="/u/{{$.User.Username}}/{{.Slug}}" target="_blank" class="btn btn-secondary">View
+                                Page</a>
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+
+            <div id="scheduled" class="tab-content">
+                <h3>Upcoming Bookings</h3>
+                <div id="dynamic-bookings">
+                    {{range .Bookings}}
+                    <div class="card" style="border-left: 4px solid var(--primary);">
+                        <div class="card-header">
+                            <h4 style="margin:0;">{{.EventTitle}} with {{.Name}}</h4>
+                            <span class="text-primary" style="font-weight: bold;">{{.StartTime}}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                            <div>
+                                <p style="margin: 5px 0 0 0;">📧 <a
+                                        href="/cdn-cgi/l/email-protection#b5cece9bf0d8d4dcd9c8c8">{{.Email}}</a></p>
+                                {{if .Phone}}<p style="margin: 5px 0 0 0;">📞 {{.Phone}}</p>{{end}}
+                            </div>
+                            <form method="POST" action="/dashboard/booking/cancel"
+                                onsubmit="return confirm('Cancel this booking?');">
+                                <input type="hidden" name="id" value="{{.ID}}">
+                                <button class="btn btn-danger btn-sm">Cancel Meeting</button>
+                            </form>
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+
+            <div id="settings" class="tab-content">
+                <form method="POST" action="/dashboard/settings" class="card">
+                    <h3>Account Settings</h3>
+
+                    <div class="theme-toggle">
+                        <div>
+                            <b>Dark Mode</b>
+                            <p class="text-muted" style="margin: 2px 0 0 0; font-size: 0.82rem;">Switch between light
+                                and dark theme.</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="darkModeToggle">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+
+                    <label>Email <span class="text-muted">(For booking notifications)</span></label>
+                    <input type="email" name="email" value="{{if and .User .User.Email}}{{.User.Email}}{{end}}"
+                        placeholder="you@example.com">
+
+                    <label>Calendar URL <span class="text-muted">(ICS feed to block busy times)</span></label>
+                    <input type="url" name="ics_url" value="{{if and .User .User.IcsURL}}{{.User.IcsURL}}{{end}}"
+                        placeholder="https://calendar.google.com/...ical/...">
+
+                    <label>Timezone</label>
+                    <select name="timezone">
+                        <option value="America/New_York" {{if and .User (eq .User.Timezone "America/New_York"
+                            )}}selected{{end}}>Eastern Time (US)</option>
+                        <option value="America/Chicago" {{if and .User (eq .User.Timezone "America/Chicago"
+                            )}}selected{{end}}>Central Time (US)</option>
+                        <option value="America/Denver" {{if and .User (eq .User.Timezone "America/Denver"
+                            )}}selected{{end}}>Mountain Time (US)</option>
+                        <option value="America/Los_Angeles" {{if and .User (eq .User.Timezone "America/Los_Angeles"
+                            )}}selected{{end}}>Pacific Time (US)</option>
+                        <option value="Europe/London" {{if and .User (eq .User.Timezone "Europe/London"
+                            )}}selected{{end}}>London (UK)</option>
+                        <option value="Europe/Paris" {{if and .User (eq .User.Timezone "Europe/Paris"
+                            )}}selected{{end}}>Central Europe</option>
+                        <option value="Asia/Tokyo" {{if and .User (eq .User.Timezone "Asia/Tokyo" )}}selected{{end}}>
+                            Tokyo (JST)</option>
+                        <option value="Australia/Sydney" {{if and .User (eq .User.Timezone "Australia/Sydney"
+                            )}}selected{{end}}>Sydney (AEDT)</option>
+                        <option value="UTC" {{if and .User (eq .User.Timezone "UTC" )}}selected{{end}}>UTC</option>
+                    </select>
+
+                    <h4 style="margin-top: 20px;">Working Days</h4>
+                    <div class="checkbox-group">
+                        <label><input type="checkbox" name="work_days" value="1" {{if and .User (contains
+                                .User.WorkDays "1" )}}checked{{end}}> Mon</label>
+                        <label><input type="checkbox" name="work_days" value="2" {{if and .User (contains
+                                .User.WorkDays "2" )}}checked{{end}}> Tue</label>
+                        <label><input type="checkbox" name="work_days" value="3" {{if and .User (contains
+                                .User.WorkDays "3" )}}checked{{end}}> Wed</label>
+                        <label><input type="checkbox" name="work_days" value="4" {{if and .User (contains
+                                .User.WorkDays "4" )}}checked{{end}}> Thu</label>
+                        <label><input type="checkbox" name="work_days" value="5" {{if and .User (contains
+                                .User.WorkDays "5" )}}checked{{end}}> Fri</label>
+                        <label><input type="checkbox" name="work_days" value="6" {{if and .User (contains
+                                .User.WorkDays "6" )}}checked{{end}}> Sat</label>
+                        <label><input type="checkbox" name="work_days" value="0" {{if and .User (contains
+                                .User.WorkDays "0" )}}checked{{end}}> Sun</label>
+                    </div>
+
+                    <h4 style="margin-top: 20px;">Working Hours</h4>
+                    <div class="split-view" style="display: flex; gap: 20px;">
+                        <div style="flex: 1;"><label>Start</label><input type="time" name="work_start"
+                                value="{{if and .User .User.WorkStart}}{{.User.WorkStart}}{{else}}09:00{{end}}">
+                        </div>
+                        <div style="flex: 1;"><label>End</label><input type="time" name="work_end"
+                                value="{{if and .User .User.WorkEnd}}{{.User.WorkEnd}}{{else}}17:00{{end}}"></div>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: 15px;">Save Settings</button>
+
+                    <hr style="border:0; border-top: 1px solid var(--border); margin: 24px 0 20px 0;">
+                    <h4 style="margin: 0 0 4px 0;">Email Templates</h4>
+                    <p class="text-muted" style="margin: 0 0 16px 0; font-size: 0.85rem;">
+                        Customize the emails sent to invitees. Leave blank to use the default template file.<br>
+                        Available tags: <code>[Name]</code> <code>[EventName]</code> <code>[HostName]</code>
+                        <code>[Time]</code> <code>[Location]</code>
+                    </p>
+
+                    <label>Booking Confirmation Template <span class="text-muted">(sent to invitee on
+                            booking)</span></label>
+                    <textarea name="booking_template" rows="6"
+                        placeholder="Leave blank to use templates/email_template.html"
+                        style="font-family: monospace; font-size: 0.85rem;">{{if and .User .User.BookingTemplate}}{{.User.BookingTemplate}}{{end}}</textarea>
+
+                    <label style="margin-top: 8px;">Cancellation Template <span class="text-muted">(sent to invitee on
+                            cancel)</span></label>
+                    <textarea name="cancel_template" rows="6"
+                        placeholder="Leave blank to use templates/cancel_template.html"
+                        style="font-family: monospace; font-size: 0.85rem;">{{if and .User .User.CancelTemplate}}{{.User.CancelTemplate}}{{end}}</textarea>
+
+                    <p class="text-muted" style="font-size: 0.82rem; margin-top: -8px;">
+                        Per-event templates (set when creating an event) override this global booking template for
+                        that event type only.
+                    </p>
+                </form>
+
+                {{if or .GoogleEnabled .MicrosoftEnabled}}
+                <div class="card" style="margin-top: 16px;">
+                    <h4 style="margin-top: 0;">Calendar Integrations</h4>
+                    <p class="text-muted" style="margin-top: -8px;">Connect your calendar to auto-create events and
+                        meeting links on every booking.</p>
+
+                    {{if .GoogleEnabled}}
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border);">
+                        <div>
+                            <b>Google Calendar + Meet</b>
+                            <p class="text-muted" style="margin: 2px 0 0 0; font-size: 0.85rem;">Auto-creates Google
+                                Calendar events with a Meet link.</p>
+                        </div>
+                        {{if and .User .User.GoogleRefreshToken}}
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="color: var(--success); font-weight: 600;">✓ Connected</span>
+                            <form method="POST" action="/auth/google/disconnect" style="margin: 0;">
+                                <button class="btn btn-danger btn-sm">Disconnect</button>
+                            </form>
+                        </div>
+                        {{else}}
+                        <a href="/auth/google" class="btn btn-secondary btn-sm" style="white-space: nowrap;">Connect
+                            Google</a>
+                        {{end}}
+                    </div>
+                    {{end}}
+
+                    {{if .MicrosoftEnabled}}
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0;">
+                        <div>
+                            <b>Microsoft Calendar + Teams</b>
+                            <p class="text-muted" style="margin: 2px 0 0 0; font-size: 0.85rem;">Auto-creates Outlook
+                                events with a Teams meeting link.</p>
+                        </div>
+                        {{if and .User .User.MicrosoftRefreshToken}}
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="color: var(--success); font-weight: 600;">✓ Connected</span>
+                            <form method="POST" action="/auth/microsoft/disconnect" style="margin: 0;">
+                                <button class="btn btn-danger btn-sm">Disconnect</button>
+                            </form>
+                        </div>
+                        {{else}}
+                        <a href="/auth/microsoft" class="btn btn-secondary btn-sm" style="white-space: nowrap;">Connect
+                            Microsoft</a>
+                        {{end}}
+                    </div>
+                    {{end}}
+                </div>
+                {{end}}
+            </div>
+        </div>
+        <div id="page-booking" class="{{if eq .Page `booking`}}page-active{{else}}page-inactive{{end}}">
+            <div class="split-view" style="display: flex; flex-wrap: wrap; gap: 30px;">
+                <div style="flex: 1; min-width: 250px; border-right: 1px solid var(--border); padding-right: 20px;">
+                    <p class="text-muted" style="margin-bottom: 5px;">{{.Host.Username}}</p>
+                    <h1 style="margin-top: 0;">{{.EventType.Title}}</h1>
+                    <div style="margin: 20px 0;">
+                        <p>⏱️ <b>{{.EventType.Duration}} min</b></p>
+                        {{if eq .MeetingType "google_meet"}}<p>📹 <b>Google Meet</b></p>
+                        {{else if eq .MeetingType "teams"}}<p>💼 <b>Microsoft Teams</b></p>
+                        {{else if eq .MeetingType "phone"}}<p>📞 <b>Phone Call</b></p>
+                        {{else if eq .MeetingType "in_person"}}<p>📍 <b>{{.EventType.Location}}</b></p>
+                        {{else if .EventType.Location}}<p>🔗 <b>{{.EventType.Location}}</b></p>{{end}}
+                    </div>
+                    <p style="white-space: pre-wrap; color: var(--muted);">{{.EventType.Description}}</p>
+                </div>
+
+                <div style="flex: 2; min-width: 300px;">
+                    <h3 style="margin-top: 0; text-align: center;">Select a Date & Time</h3>
+
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--card-alt); padding: 10px; border-radius: 8px;">
+                        <a href="?d={{.PrevDate}}&tz={{.VisitorTZ}}" class="btn btn-secondary btn-sm"
+                            title="Previous Day">←</a>
+                        <div style="text-align: center;">
+                            <input type="date" id="datePicker" value="{{.CurrentDate}}"
+                                style="margin: 0; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--primary); font-weight: bold; color: var(--primary); cursor: pointer; background: var(--card); font-family: inherit;">
+                        </div>
+                        <a href="?d={{.NextDate}}&tz={{.VisitorTZ}}" class="btn btn-secondary btn-sm"
+                            title="Next Day">→</a>
+                    </div>
+
+                    <div class="slots" id="slotContainer">
+                        {{range .Slots}}
+                        <div class="slot {{if not .Available}}disabled{{end}}" data-utc="{{.UTCStart}}"
+                            data-available="{{.Available}}" {{if
+                            .Available}}onclick="openForm('{{.UTCStart}}', this.innerText)" {{end}}>
+                            {{.UTCStart}}
+                        </div>
+                        {{end}}
+                    </div>
+
+                    <form id="bookingForm" method="POST" class="card"
+                        style="display:none; margin-top: 20px; border: 2px solid var(--primary);">
+                        <div style="display:flex; justify-content: space-between; margin-bottom: 15px;">
+                            <h3 style="margin:0; color: var(--primary);">Confirm Booking</h3>
+                            <span id="formTimeDisplay"
+                                style="font-weight:bold; background: #f3e5f5; padding: 4px 10px; border-radius: 12px; color: var(--primary);"></span>
+                        </div>
+                        <input type="hidden" name="utc_start" id="utcInput">
+                        <input type="hidden" name="tz" id="tzInput" value="{{.VisitorTZ}}">
+
+                        <label>Name</label><input type="text" name="name" required>
+                        <label>Email</label><input type="email" name="email" required>
+                        {{if eq .MeetingType "phone"}}
+                        <label>Your Phone Number <span class="text-muted">(host will call you)</span></label>
+                        <input type="tel" name="invitee_phone" placeholder="+1 (555) 000-0000" required>
+                        {{end}}
+                        <div style="display:flex; gap:10px; margin-top: 10px;">
+                            <button type="button" class="btn btn-secondary" style="flex:1;"
+                                onclick="closeForm()">Cancel</button>
+                            <button type="submit" class="btn btn-primary" style="flex:2;">Confirm</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="newEventModal" class="modal-overlay" style="display:none;">
+        <form method="POST" action="/dashboard/event" class="modal">
+            <h3>Create Event Type</h3>
+            <label>Event Name</label>
+            <input type="text" name="title" placeholder="e.g. 30 Minute Intro Call" required>
+
+            <div style="display: flex; gap: 15px;">
+                <div style="flex: 1;"><label>Duration (mins)</label><input type="number" name="duration" value="30"
+                        required></div>
+                <div style="flex: 2;">
+                    <label>Meeting Type</label>
+                    <select name="meeting_type" id="meetingTypeSelect" onchange="updateLocationField()">
+                        {{if .GoogleEnabled}}<option value="google_meet">📹 Google Meet (auto-generated)</option>{{end}}
+                        {{if .MicrosoftEnabled}}<option value="teams">💼 Microsoft Teams (auto-generated)</option>
+                        {{end}}
+                        <option value="custom_link">🔗 Custom Link</option>
+                        <option value="phone">📞 Phone Call</option>
+                        <option value="in_person">📍 In Person</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="locationFieldWrap">
+                <label id="locationLabel">Link / Address</label>
+                <input type="text" name="location" id="locationInput" placeholder="https://zoom.us/j/...">
+            </div>
+
+            <label>Public Description</label>
+            <textarea name="description" rows="2" placeholder="What is this meeting about?"></textarea>
+
+            <hr style="border:0; border-top: 1px solid var(--border); margin: 15px 0;">
+            <h4 style="margin-bottom: 5px; color: var(--primary);">Email Automation</h4>
+
+            <label>Custom Email Template (Optional)</label>
+            <textarea name="email_template" rows="3" placeholder="Leave blank for default."></textarea>
+            <p class="text-muted" style="margin-top:-10px; font-size:0.8rem;">Tags: [Name], [EventName], [HostName],
+                [Time], [Location]</p>
+
+            <label>Send Reminder Email</label>
+            <select name="reminder_minutes">
+                <option value="0">No Reminder</option>
+                <option value="15">15 minutes before</option>
+                <option value="30">30 minutes before</option>
+                <option value="60">1 hour before</option>
+                <option value="1440">24 hours before</option>
+            </select>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px;">
+                <button type="button" class="btn btn-secondary"
+                    onclick="document.getElementById('newEventModal').style.display='none'">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Event</button>
+            </div>
+        </form>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script>
+        function updateLocationField() {
+            const sel = document.getElementById('meetingTypeSelect');
+            const wrap = document.getElementById('locationFieldWrap');
+            const label = document.getElementById('locationLabel');
+            const input = document.getElementById('locationInput');
+            if (!sel || !wrap) return;
+            const type = sel.value;
+            if (type === 'google_meet' || type === 'teams') {
+                wrap.style.display = 'none';
+                input.required = false;
+            } else if (type === 'phone') {
+                wrap.style.display = 'none';
+                input.required = false;
+            } else if (type === 'in_person') {
+                wrap.style.display = '';
+                label.textContent = 'Address';
+                input.placeholder = '123 Main St, City, State';
+                input.required = true;
+            } else {
+                wrap.style.display = '';
+                label.textContent = 'Link';
+                input.placeholder = 'https://zoom.us/j/...';
+                input.required = false;
+            }
+        }
+        updateLocationField();
+
+        const darkToggle = document.getElementById('darkModeToggle');
+        const applyTheme = (dark) => {
+            document.body.classList.toggle('dark', dark);
+            if (darkToggle) darkToggle.checked = dark;
+        };
+        applyTheme(localStorage.getItem('calpal-theme') === 'dark');
+        if (darkToggle) {
+            darkToggle.addEventListener('change', () => {
+                const isDark = darkToggle.checked;
+                localStorage.setItem('calpal-theme', isDark ? 'dark' : 'light');
+                applyTheme(isDark);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const goEnv = document.getElementById('go-env-check').innerText;
+            if (goEnv.includes('Page')) {
+                document.getElementById('page-home').className = 'page-inactive';
+                document.getElementById('page-dashboard').className = 'page-active';
+                document.getElementById('page-booking').className = 'page-inactive';
+
+                document.getElementById('nav-username').innerText = 'DemoUser';
+
+                document.getElementById('dynamic-events').innerHTML = `
+                    <div class="card">
+                        <div class="card-header"><h4 style="margin:0;">Coffee Chat <span class="text-muted">(30 min)</span></h4></div>
+                        <p class="text-muted">Let's talk about your project.</p>
+                        <p style="font-size: 0.85rem; color: var(--primary); margin-top: -5px;">⏰ Auto-reminder set for 30 mins before</p>
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <input type="text" value="https://calpal.mydomain.com/u/DemoUser/coffee-chat" readonly style="margin:0; background:var(--card-alt); color:var(--muted); flex: 1; min-width: 200px;">
+                            <button class="btn btn-secondary">View Page</button>
+                        </div>
+                    </div>`;
+
+                document.getElementById('dynamic-bookings').innerHTML = `
+                    <div class="card" style="border-left: 4px solid var(--primary);">
+                        <div class="card-header"><h4 style="margin:0;">Coffee Chat with John Doe</h4><span class="text-primary">Tomorrow at 10:00 AM</span></div>
+                        <p style="margin: 5px 0 0 0;">📧 john@example.com</p>
+                    </div>`;
+            }
+        });
+
+        document.querySelectorAll('.slot[data-utc]').forEach(function (slot) {
+            const utc = slot.getAttribute('data-utc');
+            if (utc) {
+                const d = new Date(utc);
+                const localTime = d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+                slot.innerText = localTime;
+            }
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const browserTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (!urlParams.get('tz') && document.getElementById('page-booking').className.includes('page-active')) {
+            urlParams.set('tz', browserTz);
+            window.location.replace(window.location.pathname + '?' + urlParams.toString());
+        }
+
+        const datePicker = document.getElementById('datePicker');
+        if (datePicker) {
+            const currentD = urlParams.get('d');
+            if (currentD) {
+                datePicker.value = currentD;
+            }
+            datePicker.addEventListener('change', function () {
+                urlParams.set('d', this.value);
+                window.location.search = urlParams.toString();
+            });
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        function openForm(utcTime, displayTime) {
+            document.getElementById('slotContainer').style.display = 'none';
+            document.getElementById('bookingForm').style.display = 'block';
+            document.getElementById('utcInput').value = utcTime;
+            document.getElementById('formTimeDisplay').innerText = displayTime;
+        }
+
+        function closeForm() {
+            document.getElementById('slotContainer').style.display = 'grid';
+            document.getElementById('bookingForm').style.display = 'none';
+        }
+
+        setInterval(async () => {
+            const dashboardPage = document.getElementById('page-dashboard');
+            const scheduledTab = document.getElementById('scheduled');
+
+            if (dashboardPage && dashboardPage.classList.contains('page-active') &&
+                scheduledTab && scheduledTab.classList.contains('active')) {
+                try {
+                    const res = await fetch('/dashboard');
+                    if (res.ok) {
+                        const html = await res.text();
+                        const doc = new DOMParser().parseFromString(html, 'text/html');
+
+                        const newBookings = doc.getElementById('dynamic-bookings');
+                        const currentBookings = document.getElementById('dynamic-bookings');
+
+                        if (newBookings && currentBookings && newBookings.innerHTML !== currentBookings.innerHTML) {
+                            currentBookings.innerHTML = newBookings.innerHTML;
+                        }
+                    }
+                } catch (e) {
+
+                }
+            }
+        }, 15000);
+    </script>
+</body>
+
+</html>

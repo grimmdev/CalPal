@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bubbleBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00E5FF" />
+      <stop offset="100%" stop-color="#007BFF" />
+    </linearGradient>
+    <linearGradient id="bubblePink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF75C3" />
+      <stop offset="100%" stop-color="#FF088F" />
+    </linearGradient>
+    <linearGradient id="bubbleYellow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFE873" />
+      <stop offset="100%" stop-color="#FFB347" />
+    </linearGradient>
+    <linearGradient id="bubbleGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#42E695" />
+      <stop offset="100%" stop-color="#3BB2B8" />
+    </linearGradient>
+
+    <linearGradient id="calBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b86ce6" />
+      <stop offset="100%" stop-color="#8e44ad" />
+    </linearGradient>
+    
+    <linearGradient id="paperGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f1f5f9" />
+    </linearGradient>
+
+    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFE77A" />
+      <stop offset="100%" stop-color="#F6A820" />
+    </linearGradient>
+
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="12" stdDeviation="15" flood-color="#8e44ad" flood-opacity="0.3" />
+    </filter>
+  </defs>
+
+  <circle cx="420" cy="140" r="50" fill="url(#bubbleBlue)" opacity="0.85" />
+  <circle cx="100" cy="380" r="40" fill="url(#bubblePink)" opacity="0.85" />
+  <circle cx="80" cy="160" r="24" fill="url(#bubbleYellow)" opacity="0.9" />
+  <circle cx="440" cy="360" r="30" fill="url(#bubbleGreen)" opacity="0.85" />
+
+  <g filter="url(#shadow)">
+    <rect x="106" y="136" width="300" height="280" rx="48" fill="url(#calBodyGrad)" />
+    
+    <path d="M 106 184 A 48 48 0 0 1 154 136 L 358 136 A 48 48 0 0 1 406 184 L 406 200 Q 256 160 106 200 Z" fill="#ffffff" opacity="0.15" />
+
+    <rect x="126" y="206" width="260" height="186" rx="32" fill="url(#paperGrad)" />
+  </g>
+
+  <circle cx="182" cy="176" r="12" fill="#5F2278" />
+  <circle cx="330" cy="176" r="12" fill="#5F2278" />
+
+  <rect x="166" y="88" width="32" height="80" rx="16" fill="#000000" opacity="0.15" />
+  <rect x="166" y="82" width="32" height="80" rx="16" fill="url(#ringGrad)" />
+  <rect x="314" y="88" width="32" height="80" rx="16" fill="#000000" opacity="0.15" />
+  <rect x="314" y="82" width="32" height="80" rx="16" fill="url(#ringGrad)" />
+
+  <g>
+    <circle cx="216" cy="286" r="16" fill="#4A4A4A" />
+    <circle cx="210" cy="278" r="5" fill="#ffffff" />
+    
+    <circle cx="296" cy="286" r="16" fill="#4A4A4A" />
+    <circle cx="290" cy="278" r="5" fill="#ffffff" />
+
+    <ellipse cx="182" cy="306" rx="16" ry="10" fill="#FFB7B2" opacity="0.7" />
+    <ellipse cx="330" cy="306" rx="16" ry="10" fill="#FFB7B2" opacity="0.7" />
+
+    <path d="M 236 306 Q 256 332 276 306" stroke="#4A4A4A" stroke-width="10" stroke-linecap="round" fill="none" />
+  </g>
+
+  <path d="M 336 226 A 10 10 0 0 1 356 226 A 10 10 0 0 1 376 226 Q 376 242 356 258 Q 336 242 336 226 Z" fill="#FF5ACD" opacity="0.8" />
+</svg>
