@@ -90,7 +90,7 @@ To allow CalPal to sync automatically with host calendars, you need to configure
 4. Name your app (e.g., "CalPal") and select "Accounts in any organizational directory and personal Microsoft accounts".
 5. Under **Redirect URI**, select **Web** and input your base URL followed by the Microsoft callback path:
    * Example: `https://cal.yourdomain.com/auth/microsoft/callback`
-6. Click **Register**. The "Application (client) ID" shown is your `MICROSOFT_CLIENT_ID`.
+6. Click **Register**. The "Application (client) ID" shown is your `MICROSOFT_CLIENT_ID`. The "Directory (tenant) ID" is your `MICROSOFT_TENANT_ID` (or use `common` if you selected personal accounts in step 4).
 7. Navigate to **Certificates & secrets** in the left menu.
 8. Click **New client secret**, give it a description, and click **Add**.
 9. Copy the **Value** of the secret (not the Secret ID) and use it as your `MICROSOFT_CLIENT_SECRET` environment variable.
