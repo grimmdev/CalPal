@@ -38,6 +38,7 @@ CalPal is configured entirely through environment variables, making it highly co
 | `GOOGLE_CLIENT_SECRET` | OAuth Client Secret for Google integration. | *(None)* | `GOCSPX-abcdefghijklmno` |
 | `MICROSOFT_CLIENT_ID` | OAuth Client ID for Microsoft integration. | *(None)* | `abcd-1234-efgh-5678` |
 | `MICROSOFT_CLIENT_SECRET` | OAuth Client Secret for Microsoft integration. | *(None)* | `secret-value-here` |
+| `MICROSOFT_TENANT_ID` | OAuth Tenant ID for Microsoft. Use `common` for personal accounts. | `common` | `1234abcd-56ef-78gh` |
 
 ## Running with Docker
 
