@@ -18,8 +18,9 @@ CalPal is a streamlined, compiled scheduling application designed to be a drop-i
 *(Replace the placeholder links below with actual paths to your screenshots, e.g., `static/dashboard.png`)*
 
 <div align="center">
-  <img src="https://via.placeholder.com/800x450?text=Dashboard+View" alt="Dashboard View" width="48%">
-  <img src="https://via.placeholder.com/800x450?text=Public+Booking+Page" alt="Public Booking Page" width="48%">
+  <img src="assets/images/img1.png" alt="Dashboard View" width="48%">
+  <img src="assets/images/img2.png" alt="Schedules Page" width="48%">
+  <img src="assets/images/img3.png" alt="Public Booking Page" width="48%">
 </div>
 
 ## Environment Variables
