@@ -10,7 +10,6 @@ permissions:
   packages: write
 
 jobs:
-  # JOB 1: Build Binaries for Windows/Linux/Mac
   build-binaries:
     name: Build Binary (${{ matrix.os }}/${{ matrix.arch }})
     runs-on: ubuntu-latest
@@ -27,7 +26,7 @@ jobs:
             arch: amd64
             ext: ".exe"
           - os: darwin
-            arch: arm64 # Apple Silicon
+            arch: arm64
             ext: ""
 
     steps:
@@ -50,9 +49,9 @@ jobs:
         run: |
           mkdir dist
           mv calpal${{ matrix.ext }} dist/
-          cp -r public dist/
+          if [ -d "static" ]; then cp -r static dist/; fi
+          if [ -d "templates" ]; then cp -r templates dist/; fi
           
-          # Create archive
           cd dist
           if [ "${{ matrix.os }}" = "windows" ]; then
             zip -r ../calpal-${{ matrix.os }}-${{ matrix.arch }}.zip .
@@ -61,7 +60,7 @@ jobs:
           fi
 
       - name: Upload Release Asset
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
@@ -70,7 +69,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # JOB 2: Build and Push Docker Image (Multi-Arch)
   build-docker:
     name: Build Docker Image
     runs-on: ubuntu-latest
@@ -91,7 +89,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels)
+      - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
