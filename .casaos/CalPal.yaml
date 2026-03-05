@@ -1,30 +1,9 @@
-name: CalPal
+version: "3.7"
+name: calpal
 services:
   calpal:
-    cpu_shares: 90
-    command: []
     container_name: calpal
-    deploy:
-      resources:
-        limits:
-          memory: 15406M
-    environment:
-      - BASE_URL=http://localhost:8080
-      - GOOGLE_CLIENT_ID=
-      - GOOGLE_CLIENT_SECRET=
-      - MICROSOFT_CLIENT_ID=
-      - MICROSOFT_CLIENT_SECRET=
-      - MICROSOFT_TENANT_ID=common
-      - PORT=8080
-      - SMTP_FROM=
-      - SMTP_HOST=
-      - SMTP_PASS=
-      - SMTP_PORT=587
-      - SMTP_USER=
-    hostname: calpal
-    image: ghcr.io/grimmdev/calpal:latest
-    labels:
-      icon: https://raw.githubusercontent.com/grimmdev/CalPal/refs/heads/main/static/calpal.svg
+    image: ghcr.io/grimmdev/calpal:1.0.0
     ports:
       - target: 8080
         published: "8080"
@@ -32,25 +11,57 @@ services:
     restart: unless-stopped
     volumes:
       - type: bind
-        source: /DATA/AppData/CalPal/templates
-        target: /app/templates
-      - type: bind
-        source: /DATA/AppData/CalPal/data
+        source: /DATA/AppData/$AppID/data
         target: /app/data
-    devices: []
-    cap_add: []
+      - type: bind
+        source: /DATA/AppData/$AppID/templates
+        target: /app/templates
+    environment:
+      - PORT=8080
+      - BASE_URL=http://localhost:8080
+      - SMTP_HOST=
+      - SMTP_PORT=587
+      - SMTP_USER=
+      - SMTP_PASS=
+      - SMTP_FROM=
+      - GOOGLE_CLIENT_ID=
+      - GOOGLE_CLIENT_SECRET=
+      - MICROSOFT_CLIENT_ID=
+      - MICROSOFT_CLIENT_SECRET=
+      - MICROSOFT_TENANT_ID=common
     network_mode: bridge
     privileged: false
+    x-casaos:
+      ports:
+        - container: "8080"
+          description:
+            en_us: WebUI HTTP Port
+      volumes:
+        - container: /app/data
+          description:
+            en_us: Data directory for SQLite database.
+        - container: /app/templates
+          description:
+            en_us: Templates directory for custom emails.
+
 x-casaos:
-  author: self
-  category: self
-  hostname: ""
-  icon: https://raw.githubusercontent.com/grimmdev/CalPal/refs/heads/main/static/calpal.svg
-  index: /
-  is_uncontrolled: false
-  port_map: "8080"
-  scheme: http
-  store_app_id: CalPal
+  architectures:
+    - amd64
+    - arm64
+  main: calpal
+  author: grimmdev
+  category: Productivity
+  description:
+    en_us: CalPal is a fast, self-hosted, and lightweight scheduling alternative with zero external dependencies. Built with Go and SQLite, it requires no heavy external databases and deploys instantly via a single lightweight Docker container.
+  developer: grimmdev
+  icon: https://raw.githubusercontent.com/grimmdev/CalPal/refs/heads/main/assets/images/icon.png
+  screenshot_link:
+    - https://raw.githubusercontent.com/grimmdev/CalPal/refs/heads/main/assets/images/img1.png
+    - https://raw.githubusercontent.com/grimmdev/CalPal/refs/heads/main/assets/images/img2.png
+    - https://raw.githubusercontent.com/grimmdev/CalPal/refs/heads/main/assets/images/img3.png
+  tagline:
+    en_us: Fast, self-hosted scheduling alternative.
   title:
-    custom: CalPal
-    en_us: calpal
+    en_us: CalPal
+  index: /
+  port_map: "8080"
