@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calpal | Your Cute, Self-Hosted Scheduling Buddy</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Quicksand', 'sans-serif'],
+                    },
+                    colors: {
+                        calpal: {
+                            light: '#FFF0F5',   // Lavender blush
+                            pink: '#FFB6C1',    // Light pink
+                            rose: '#FF69B4',    // Hot pink
+                            blue: '#87CEFA',    // Light sky blue
+                            mint: '#98FF98',    // Mint green
+                            text: '#4A4A4A',    // Soft dark grey for readable text
+                        }
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #FFF0F5;
+            background-image:
+                radial-gradient(circle at 15% 50%, rgba(255, 182, 193, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 85% 30%, rgba(135, 206, 250, 0.4) 0%, transparent 50%);
+            color: #4A4A4A;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FFF0F5;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #FFB6C1;
+            border-radius: 10px;
+            border: 3px solid #FFF0F5;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #FF69B4;
+        }
+
+        .blob-shape {
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            transition: all 1s ease-in-out;
+        }
+
+        .blob-shape:hover {
+            border-radius: 40% 60% 70% 30% / 40% 70% 30% 60%;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(255, 105, 180, 0.1);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+    </style>
+</head>
+
+<body class="antialiased min-h-screen flex flex-col relative selection:bg-calpal-rose selection:text-white">
+
+    <div
+        class="fixed top-20 left-10 w-32 h-32 bg-calpal-pink/30 rounded-full mix-blend-multiply filter blur-xl animate-float pointer-events-none -z-10">
+    </div>
+    <div
+        class="fixed top-40 right-20 w-48 h-48 bg-calpal-blue/30 rounded-full mix-blend-multiply filter blur-xl animate-float-delayed pointer-events-none -z-10">
+    </div>
+    <div
+        class="fixed bottom-40 left-1/4 w-40 h-40 bg-calpal-mint/30 rounded-full mix-blend-multiply filter blur-xl animate-float pointer-events-none -z-10">
+    </div>
+
+    <nav class="w-full px-6 py-4 z-50 sticky top-0">
+        <div class="max-w-6xl mx-auto flex justify-between items-center glass-card rounded-full px-6 py-3 shadow-md">
+            <div class="flex items-center gap-2 text-calpal-rose font-bold text-2xl tracking-tight">
+                <img src="https://raw.githubusercontent.com/grimmdev/CalPal/refs/heads/main/static/calpal.svg"
+                    class="w-8 h-8 text-calpal-rose" />
+                Calpal
+            </div>
+            <div class="hidden md:flex gap-6 font-semibold text-calpal-text">
+                <a href="#features" class="hover:text-calpal-rose transition-colors">Features</a>
+                <a href="#installation" class="hover:text-calpal-rose transition-colors">Installation</a>
+                <a href="#faq" class="hover:text-calpal-rose transition-colors">FAQ</a>
+            </div>
+            <div>
+                <a href="https://github.com/grimmdev/calpal" target="_blank"
+                    class="flex items-center gap-2 bg-calpal-text text-white px-5 py-2.5 rounded-full font-bold hover:bg-gray-800 transition-transform transform hover:scale-105 shadow-md">
+                    <i data-lucide="github" class="w-5 h-5"></i>
+                    GitHub
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow flex flex-col items-center justify-center px-4 pt-12 pb-20 text-center relative z-10">
+        <div class="max-w-4xl mx-auto">
+            <div
+                class="inline-block bg-white px-4 py-1.5 rounded-full text-calpal-rose font-bold text-sm mb-6 shadow-sm border border-calpal-pink/50 animate-bounce-slow">
+                The self-hosted scheduling app is here!
+            </div>
+
+            <h1 class="text-5xl md:text-7xl font-bold text-calpal-text mb-6 leading-tight">
+                Your <span class="text-calpal-rose relative">cute<svg
+                        class="absolute w-full h-3 -bottom-1 left-0 text-calpal-pink" viewBox="0 0 100 10"
+                        preserveAspectRatio="none">
+                        <path d="M0 5 Q 50 15 100 5" stroke="currentColor" stroke-width="4" fill="transparent" />
+                    </svg></span>, self-hosted <br /> scheduling buddy.
+            </h1>
+
+            <p class="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto font-medium">
+                Ditch the enterprise bloat. Calpal is a fast, lightweight Calendly alternative that runs beautifully on
+                your own server. Total privacy, zero tracking.
+            </p>
+
+            <div class="flex justify-center items-center">
+                <a href="#installation"
+                    class="bg-calpal-rose text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-pink-500 transition-all transform hover:scale-105 shadow-[0_4px_14px_0_rgba(255,105,180,0.39)] flex items-center gap-2">
+                    <i data-lucide="download-cloud" class="w-5 h-5"></i>
+                    Get Calpal Now
+                </a>
+            </div>
+        </div>
+
+        <div class="mt-20 relative w-full max-w-4xl mx-auto perspective-1000">
+            <div
+                class="absolute -inset-1 bg-gradient-to-r from-calpal-pink to-calpal-blue rounded-[3rem] blur opacity-30 animate-pulse">
+            </div>
+
+            <div
+                class="relative bg-white/95 backdrop-blur-xl rounded-[2.5rem] p-6 sm:p-10 shadow-2xl border-2 border-white max-w-4xl mx-auto flex flex-col md:flex-row gap-10 text-left transform transition-transform hover:-translate-y-2 duration-500">
+
+                <div class="flex-1 md:border-r-2 md:border-dashed border-calpal-pink/60 md:pr-8 flex flex-col">
+                    <div
+                        class="inline-block bg-[#ffe4ef] px-5 py-2.5 rounded-full text-calpal-rose font-bold mb-5 self-start shadow-sm">
+                        Alex's Calendar
+                    </div>
+                    <h2 class="text-4xl font-bold text-gray-800 mb-6 tracking-tight">Coffee Chat</h2>
+                    <div class="bg-[#fff5f8] p-5 rounded-[1.5rem] mb-6 space-y-3 text-gray-700 shadow-inner">
+                        <p class="text-lg flex items-center gap-2"><span class="text-xl">⏱️</span> <span
+                                class="font-bold">30 min</span></p>
+                        <p class="text-lg flex items-center gap-2"><span class="text-xl">📹</span> <span
+                                class="font-bold">Google Meet</span></p>
+                    </div>
+                    <p class="text-gray-500 font-medium leading-relaxed">Let's talk about your project! Pick a time that
+                        works best for you below.</p>
+                </div>
+
+                <div class="flex-[1.3]">
+                    <h3 class="text-2xl font-bold text-center text-gray-800 mb-6">Select a Date & Time</h3>
+
+                    <div class="flex justify-between items-center bg-[#ffe4ef] p-3 rounded-full mb-8 shadow-inner">
+                        <div
+                            class="w-12 h-12 rounded-full bg-white text-calpal-rose flex items-center justify-center shadow-md hover:bg-calpal-rose hover:text-white transition-all transform hover:scale-110 cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="m15 18-6-6 6-6" />
+                            </svg>
+                        </div>
+                        <div
+                            class="font-bold text-calpal-rose text-lg flex items-center justify-center gap-2 bg-white border-2 border-calpal-rose px-6 py-2.5 rounded-full shadow-md cursor-pointer hover:-translate-y-0.5 transition-transform">
+                            📅 Today, Mar 5
+                        </div>
+                        <div
+                            class="w-12 h-12 rounded-full bg-white text-calpal-rose flex items-center justify-center shadow-md hover:bg-calpal-rose hover:text-white transition-all transform hover:scale-110 cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="m9 18 6-6-6-6" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3.5">
+                        <div
+                            class="border-2 border-calpal-rose text-calpal-rose bg-white rounded-full py-3.5 text-center font-bold cursor-pointer hover:bg-calpal-rose hover:text-white hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(255,105,180,0.2)] transition-all">
+                            09:00 AM</div>
+                        <div
+                            class="border-2 border-calpal-rose text-calpal-rose bg-white rounded-full py-3.5 text-center font-bold cursor-pointer hover:bg-calpal-rose hover:text-white hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(255,105,180,0.2)] transition-all">
+                            09:30 AM</div>
+                        <div
+                            class="border-2 border-calpal-rose text-calpal-rose bg-white rounded-full py-3.5 text-center font-bold cursor-pointer hover:bg-calpal-rose hover:text-white hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(255,105,180,0.2)] transition-all">
+                            10:00 AM</div>
+                        <div
+                            class="bg-[#ffe4ef] text-[#b898a8] border-2 border-transparent rounded-full py-3.5 text-center font-bold cursor-not-allowed line-through opacity-70">
+                            10:30 AM</div>
+                        <div
+                            class="border-2 border-calpal-rose text-calpal-rose bg-white rounded-full py-3.5 text-center font-bold cursor-pointer hover:bg-calpal-rose hover:text-white hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(255,105,180,0.2)] transition-all">
+                            11:00 AM</div>
+                        <div
+                            class="border-2 border-calpal-rose text-calpal-rose bg-white rounded-full py-3.5 text-center font-bold cursor-pointer hover:bg-calpal-rose hover:text-white hover:-translate-y-1 hover:shadow-[0_8px_20px_rgba(255,105,180,0.2)] transition-all">
+                            11:30 AM</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <section id="features" class="py-20 px-6 relative z-10 bg-white/40 mt-10">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold text-calpal-text mb-4">Everything you need, nothing you don't.</h2>
+                <p class="text-gray-600 text-lg max-w-2xl mx-auto">Built purely in Go, Calpal packs enterprise-level
+                    integrations into a remarkably tiny footprint.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="glass-card p-8 rounded-[2rem] hover:-translate-y-2 transition-transform duration-300">
+                    <div
+                        class="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 mb-6 blob-shape shadow-sm">
+                        <i data-lucide="feather" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Single Binary</h3>
+                    <p class="text-gray-600">Zero dependencies. No complex databases to configure. Download the
+                        executable and it just works out of the box.</p>
+                </div>
+
+                <div class="glass-card p-8 rounded-[2rem] hover:-translate-y-2 transition-transform duration-300">
+                    <div
+                        class="w-14 h-14 rounded-full bg-pink-100 flex items-center justify-center text-pink-500 mb-6 blob-shape shadow-sm">
+                        <i data-lucide="link" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Native Integrations</h3>
+                    <p class="text-gray-600">Seamlessly connects with Google Calendar/Meet and Microsoft Teams to
+                        auto-generate video links for your bookings.</p>
+                </div>
+
+                <div class="glass-card p-8 rounded-[2rem] hover:-translate-y-2 transition-transform duration-300">
+                    <div
+                        class="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center text-green-500 mb-6 blob-shape shadow-sm">
+                        <i data-lucide="shield-check" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Total Privacy</h3>
+                    <p class="text-gray-600">Stop giving SaaS companies access to your personal contacts and agenda. You
+                        own the server, you own the data.</p>
+                </div>
+
+                <div class="glass-card p-8 rounded-[2rem] hover:-translate-y-2 transition-transform duration-300">
+                    <div
+                        class="w-14 h-14 rounded-full bg-purple-100 flex items-center justify-center text-purple-500 mb-6 blob-shape shadow-sm">
+                        <i data-lucide="moon" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Dark Mode & Custom</h3>
+                    <p class="text-gray-600">Features built-in dark mode and fully customizable email templates. Tailor
+                        the experience for your invitees.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="installation" class="py-20 px-6 relative z-10">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-4xl font-bold text-calpal-text mb-8">Install Calpal in seconds</h2>
+
+            <div class="bg-gray-900 rounded-[2rem] p-2 shadow-2xl text-left max-w-2xl mx-auto overflow-hidden">
+                <div
+                    class="flex items-center justify-between px-4 py-3 bg-gray-800 rounded-t-[1.5rem] border-b border-gray-700">
+                    <div class="flex gap-2">
+                        <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    </div>
+                    <div class="text-gray-400 text-xs font-mono">bash</div>
+                </div>
+                <div class="p-6 font-mono text-sm text-green-400 leading-relaxed overflow-x-auto">
+                    <p class="mb-2 text-gray-500"># Download and install the latest release</p>
+                    <p class="mb-4"><span class="text-pink-400">curl</span> -sSL
+                        https://raw.githubusercontent.com/grimmdev/calpal/refs/heads/main/install.sh | <span
+                            class="text-blue-400">bash</span></p>
+
+                    <p class="mb-2 text-gray-500"># Start the application</p>
+                    <p class="mb-4"><span class="text-white">PORT=8080 ./calpal</span></p>
+
+                    <p class="text-gray-300">Calpal is running on <a href="http://localhost:8080"
+                            class="text-blue-400 hover:underline">http://localhost:8080</a></p>
+                </div>
+            </div>
+
+            <p class="mt-8 text-gray-600 font-semibold text-lg">Prefer Docker? We have a tiny image for that too.</p>
+            <div class="mt-4 inline-block bg-white border-2 border-calpal-pink px-6 py-4 rounded-full font-mono text-sm text-gray-700 shadow-sm relative group cursor-pointer hover:shadow-md transition-shadow"
+                onclick="copyDockerCmd()">
+                docker run -p 8080:8080 ghcr.io/grimmdev/calpal:latest
+                <div
+                    class="absolute inset-y-0 right-0 pr-4 flex items-center text-calpal-pink opacity-0 group-hover:opacity-100 transition-opacity">
+                    <i data-lucide="copy" class="w-5 h-5"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="py-20 px-6 relative z-10 bg-white/40 border-t border-white/50">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-4xl font-bold text-calpal-text mb-10 text-center">Frequently Asked Questions</h2>
+
+            <div class="space-y-4">
+                <div class="glass-card rounded-2xl overflow-hidden cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="px-6 py-5 flex justify-between items-center font-bold text-calpal-text text-lg">
+                        <span>Do I need a database like MySQL or PostgreSQL?</span>
+                        <i data-lucide="chevron-down"
+                            class="w-5 h-5 text-calpal-rose transition-transform duration-300"></i>
+                    </div>
+                    <div class="faq-answer px-6 text-gray-600 bg-white/50">
+                        <p class="pb-5 font-medium leading-relaxed">Nope! Calpal is completely self-contained. It stores
+                            all necessary data locally using SQLite embedded within the single Go binary, making backups
+                            as simple as copying a file.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl overflow-hidden cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="px-6 py-5 flex justify-between items-center font-bold text-calpal-text text-lg">
+                        <span>Does it integrate with my actual calendar?</span>
+                        <i data-lucide="chevron-down"
+                            class="w-5 h-5 text-calpal-rose transition-transform duration-300"></i>
+                    </div>
+                    <div class="faq-answer px-6 text-gray-600 bg-white/50">
+                        <p class="pb-5 font-medium leading-relaxed">Yes! You can connect Calpal to Google Calendar and
+                            Microsoft Teams through standard OAuth. Calpal checks your ICS feed to block out times
+                            you're busy, and auto-generates video meeting links upon booking.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl overflow-hidden cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="px-6 py-5 flex justify-between items-center font-bold text-calpal-text text-lg">
+                        <span>Can I customize the emails sent to my invitees?</span>
+                        <i data-lucide="chevron-down"
+                            class="w-5 h-5 text-calpal-rose transition-transform duration-300"></i>
+                    </div>
+                    <div class="faq-answer px-6 text-gray-600 bg-white/50">
+                        <p class="pb-5 font-medium leading-relaxed">Absolutely. Right from your dashboard settings, you
+                            can edit the global confirmation and cancellation email templates, or set custom templates
+                            per specific event type using dynamic tags like <code>[Name]</code> and <code>[Time]</code>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl overflow-hidden cursor-pointer" onclick="toggleFaq(this)">
+                    <div class="px-6 py-5 flex justify-between items-center font-bold text-calpal-text text-lg">
+                        <span>How much RAM does it use?</span>
+                        <i data-lucide="chevron-down"
+                            class="w-5 h-5 text-calpal-rose transition-transform duration-300"></i>
+                    </div>
+                    <div class="faq-answer px-6 text-gray-600 bg-white/50">
+                        <p class="pb-5 font-medium leading-relaxed">Because it's written in Go with no heavy runtime
+                            dependencies, Calpal idles around 15-20MB of RAM. It runs flawlessly on a Raspberry Pi or
+                            the smallest $4/month VPS you can find.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="mt-auto py-10 px-6 text-center border-t border-calpal-pink/20 relative z-10 bg-white/50">
+        <div class="flex justify-center items-center gap-2 text-calpal-rose font-bold text-xl mb-4">
+            <img src="https://raw.githubusercontent.com/grimmdev/CalPal/refs/heads/main/static/calpal.svg"
+                class="w-6 h-6" />
+            Calpal
+        </div>
+        <p class="text-gray-500 font-medium mb-4">Open Source and proudly independent.</p>
+        <div class="flex justify-center gap-4 text-gray-400">
+            <a href="https://github.com/grimmdev/calpal" target="_blank"
+                class="hover:text-calpal-rose transition-colors hover:-translate-y-1 transform inline-block"><i
+                    data-lucide="github" class="w-6 h-6"></i></a>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        function copyDockerCmd() {
+            const text = "docker run -p 8080:8080 ghcr.io/grimmdev/calpal:latest";
+            navigator.clipboard.writeText(text).then(() => {
+                const el = document.querySelector('.group-hover\\:opacity-100');
+                if (el) {
+                    el.innerHTML = '<i data-lucide="check" class="w-5 h-5 text-green-500"></i>';
+                    lucide.createIcons();
+                    setTimeout(() => {
+                        el.innerHTML = '<i data-lucide="copy" class="w-5 h-5"></i>';
+                        lucide.createIcons();
+                    }, 2000);
+                }
+            });
+        }
+
+        function toggleFaq(element) {
+            const answer = element.querySelector('.faq-answer');
+            const icon = element.querySelector('i[data-lucide="chevron-down"]');
+
+            if (answer.style.maxHeight && answer.style.maxHeight !== '0px') {
+                answer.style.maxHeight = '0px';
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+    </script>
+</body>
+
+</html>
