@@ -2,6 +2,10 @@
   <img src="static/calpal.svg" alt="CalPal Logo" width="120" />
   <h1>CalPal</h1>
   <p>A fast, self-hosted, and lightweight scheduling alternative with zero external dependencies.</p>
+  <p>![Go Version](https://img.shields.io/github/go-mod/go-version/grimmdev/calpall)
+![Latest Release](https://img.shields.io/github/v/release/grimmdev/calpal?label=latest)
+![Build Status](https://img.shields.io/github/actions/workflow/status/grimmdev/calpall/release.yml)
+![License](https://img.shields.io/github/license/grimmdev/calpal)</p>
 </div>
 
 CalPal is a streamlined, compiled scheduling application designed to be a drop-in replacement for tools like Calendly. Built with Go and SQLite, it requires no heavy external databases and deploys instantly via a single lightweight Docker container.
