@@ -1,6 +1,6 @@
-![Go Version](https://img.shields.io/github/go-mod/go-version/grimmdev/calpall)
+![Go Version](https://img.shields.io/github/go-mod/go-version/grimmdev/calpal)
 ![Latest Release](https://img.shields.io/github/v/release/grimmdev/calpal?label=latest)
-![Build Status](https://img.shields.io/github/actions/workflow/status/grimmdev/calpall/release.yml)
+![Build Status](https://img.shields.io/github/actions/workflow/status/grimmdev/calpal/release.yml)
 ![License](https://img.shields.io/github/license/grimmdev/calpal)
 
 <div align="center">
